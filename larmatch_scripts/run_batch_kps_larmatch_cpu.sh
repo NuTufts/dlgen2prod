@@ -4,6 +4,7 @@ OFFSET=$1
 STRIDE=$2
 SAMPLE_NAME=$3
 INPUTLIST=$4
+INPUTSTEM=$5
 
 # we assume we are already in the container
 
@@ -22,12 +23,8 @@ mkdir -p $OUTPUT_LOGDIR
 # WE WANT TO RUN MULTIPLE FILES PER JOB IN ORDER TO BE GRID EFFICIENT
 start_jobid=$(( ${OFFSET} + ${SLURM_ARRAY_TASK_ID}*${STRIDE}  ))
 
-echo "JOB ARRAYID: ${SLURM_ARRAY_TASK_ID} -- CUDA DEVICES: ${CUDA_VISIBLE_DEVICES}"
-let ndevices=$(echo $CUDA_VISIBLE_DEVICES | sed 's|,| |g' | wc -w )
-let devnum=$(expr $SLURM_ARRAY_TASK_ID % $ndevices + 1)
-cudaid=$(echo $CUDA_VISIBLE_DEVICES | sed 's|,| |g' | awk '{print '"\$${devnum}"'}')
-cudadev=$(echo "cuda:${cudaid}")
-echo "JOB ARRAYID: ${SLURM_ARRAY_TASK_ID} : CUDA DEVICE = ${cudadev}"
+cudadev="cpu"
+echo "JOB ARRAYID: ${SLURM_ARRAY_TASK_ID} : DEVICE = ${cudadev}"
 
 # LOCAL JOBDIR
 local_jobdir=`printf /tmp/larmatch_kps_jobid%04d_${SAMPLE_NAME} ${SLURM_ARRAY_TASK_ID}`
@@ -68,10 +65,8 @@ for ((i=0;i<${STRIDE};i++)); do
     # local outfile
     jobname=`printf jobid%04d ${jobid}`
     fileid=`printf fileid%04d ${jobid}`
-    #local_outfile=$(echo $baseinput | sed 's|${DLMERGED_STEM}|larmatch_kps|g' | sed 's|.root||g' | xargs -I{} echo {}"-${jobname}.root")
-    #local_basename=$(echo $baseinput | sed 's|${DLMERGED_STEM}|larmatch_kps|g' | sed 's|.root||g' | xargs -I{} echo {}"-${jobname}")
-    local_outfile=$(echo $baseinput  | sed 's|merged_dlreco|larmatch_kps_'"${fileid}"'|g')
-    local_basename=$(echo $baseinput | sed 's|merged_dlreco|larmatch_kps_'"${fileid}"'|g' | sed 's|.root||g')
+    local_outfile=$(echo $baseinput  | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileid}"'|g')
+    local_basename=$(echo $baseinput | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileid}"'|g' | sed 's|.root||g')
     echo "outfile : "$local_outfile >> ${local_logfile}
     scp $inputfile $baseinput
     
@@ -88,7 +83,7 @@ for ((i=0;i<${STRIDE};i++)); do
     mkdir -p $OUTPUT_DIR/${subdir}/
     cp ${local_basename}*larlite.root $OUTPUT_DIR/${subdir}/
     rm ${PWD}/${local_basename}*
-    rm ${PWD}/${baseinput}
+    #rm ${PWD}/${baseinput}
 done
 
 # copy log to logdir
