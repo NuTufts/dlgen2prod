@@ -27,7 +27,7 @@ cudadev="cpu"
 echo "JOB ARRAYID: ${SLURM_ARRAY_TASK_ID} : DEVICE = ${cudadev}"
 
 # LOCAL JOBDIR
-local_jobdir=`printf /tmp/larmatch_kps_jobid%d_%04d_${SAMPLE_NAME} ${SlURM_JOB_ID} ${SLURM_ARRAY_TASK_ID}`
+local_jobdir=`printf /tmp/larmatch_kps_jobid%d_%04d_${SAMPLE_NAME} ${SLURM_JOB_ID} ${SLURM_ARRAY_TASK_ID}`
 #echo "local jobdir: $local_jobdir"
 rm -rf $local_jobdir
 mkdir -p $local_jobdir
@@ -72,8 +72,9 @@ for ((i=0;i<${STRIDE};i++)); do
 
     # local outfile
     jobname=`printf jobid%04d ${jobid}`
-    local_outfile=$(echo $baseinput  | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileid}"'|g')
-    local_basename=$(echo $baseinput | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileid}"'|g' | sed 's|.root||g')
+    fileidname=`printf fileid%04d ${fileid}`
+    local_outfile=$(echo $baseinput  | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileidname}"'|g')
+    local_basename=$(echo $baseinput | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileidname}"'|g' | sed 's|.root||g')
     echo "outfile : "$local_outfile >> ${local_logfile}
     scp $inputfile $baseinput
     
@@ -90,7 +91,7 @@ for ((i=0;i<${STRIDE};i++)); do
     mkdir -p $OUTPUT_DIR/${subdir}/
     cp ${local_basename}*larlite.root $OUTPUT_DIR/${subdir}/
     rm ${PWD}/${local_basename}*
-    #rm ${PWD}/${baseinput}
+    rm ${PWD}/${baseinput}
 done
 
 # copy log to logdir
