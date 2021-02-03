@@ -3,7 +3,7 @@
 # slurm submission script for making larmatch training data
 
 #SBATCH --job-name=larmatch
-#SBATCH --output=larmatch_extbnb.log
+#SBATCH --output=larmatch_bnb5e19.log
 #SBATCH --mem-per-cpu=2000
 #SBATCH --time=1-00:00:00
 #SBATCH --array=0-49
@@ -18,12 +18,12 @@
 container=/cluster/tufts/wongjiradlab/larbys/larbys-containers/ubdl_depsonly_py3.6.11_u16.04_cu11_pytorch1.7.1.simg
 RUN_DLANA_DIR=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/larmatch_scripts/
 OFFSET=0
-STRIDE=5
+STRIDE=46
 
-SAMPLE_NAME=mcc9_v29e_dl_run3_G1_extbnb_dlana
-INPUTFILE=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/maskrcnn_input_filelists/mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt
-INPUTSTEM=merged_dlana
-FILEIDLIST=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/larmatch_scripts/larmatch_runlist_mcc9_v29e_dl_run3_G1_extbnb_dlana.txt
+SAMPLE_NAME=mcc9jan_run1_bnb5e19
+INPUTFILE=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/run1inputlists/mcc9jan_run1_bnb5e19.list
+INPUTSTEM=merged_dlreco
+FILEIDLIST=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/larmatch_scripts/larmatch_runlist_mcc9jan_run1_bnb5e19.txt
 
 module load singularity
 # GPU MODE

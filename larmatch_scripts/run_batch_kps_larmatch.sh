@@ -4,6 +4,7 @@ OFFSET=$1
 STRIDE=$2
 SAMPLE_NAME=$3
 INPUTLIST=$4
+INPUTSTEM=$5
 
 # we assume we are already in the container
 
@@ -68,10 +69,8 @@ for ((i=0;i<${STRIDE};i++)); do
     # local outfile
     jobname=`printf jobid%04d ${jobid}`
     fileid=`printf fileid%04d ${jobid}`
-    #local_outfile=$(echo $baseinput | sed 's|${DLMERGED_STEM}|larmatch_kps|g' | sed 's|.root||g' | xargs -I{} echo {}"-${jobname}.root")
-    #local_basename=$(echo $baseinput | sed 's|${DLMERGED_STEM}|larmatch_kps|g' | sed 's|.root||g' | xargs -I{} echo {}"-${jobname}")
-    local_outfile=$(echo $baseinput  | sed 's|merged_dlreco|larmatch_kps_'"${fileid}"'|g')
-    local_basename=$(echo $baseinput | sed 's|merged_dlreco|larmatch_kps_'"${fileid}"'|g' | sed 's|.root||g')
+    local_outfile=$(echo $baseinput  | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileid}"'|g')
+    local_basename=$(echo $baseinput | sed 's|'"${INPUTSTEM}"'|larmatch_kps_'"${fileid}"'|g' | sed 's|.root||g')
     echo "outfile : "$local_outfile >> ${local_logfile}
     scp $inputfile $baseinput
     
