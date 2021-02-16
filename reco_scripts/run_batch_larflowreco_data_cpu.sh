@@ -81,22 +81,23 @@ for ((i=0;i<${STRIDE};i++)); do
     echo "outfile : "$local_outfile >> ${local_logfile}
     scp $inputfile $baseinput
     scp $lminput $baselm
-
+    
     let larmatchok=`python ${WORKDIR}/check_larmatch.py ${baselm}`
     echo "RESULT OF CHECK ${baselm}: $larmatchok"
 
     if [ $larmatchok -eq 1 ]
     then
-    
-	CMD="python $RECO_TEST_DIR/run_kpsrecoman.py --input-dlmerged ${baseinput}  --input-larflow ${baselm} --output ${local_outfile} -t -mc -min "
+
+	CMD="python $RECO_TEST_DIR/run_kpsrecoman.py --input-dlmerged ${baseinput}  --input-larflow ${baselm} --output ${local_outfile} -t -min "
 	echo $CMD >> ${local_logfile}
+	#$CMD >> ${local_logfile} 2>&1
 	$CMD >> ${local_logfile}
 
-        # subfolder dir
+	# subfolder dir
 	let nsubdir=${fileid}/100
 	subdir=`printf %03d ${nsubdir}`
 
-        # copy to subdir in order to keep number of files per folder less than 100. better for file system.
+	# copy to subdir in order to keep number of files per folder less than 100. better for file system.
 	echo "COPY output to "${OUTPUT_DIR}/${subdir}/ >> ${local_logfile}
 	mkdir -p $OUTPUT_DIR/${subdir}/
 	mkdir -p $OUTPUT_ANA_DIR/${subdir}/
