@@ -21,7 +21,7 @@ Need to make lists for mask-rcnn and larmatch consistent.
 
 | Sample Type    | Num files | Official File List(s) |
 | -----------    | --------- | --------------------- |
-| BNB Nu         |   x       | x                     |
+| BNB Nu         | 15519     | run3inputlists/mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge.list |
 | BNB intrinsics | x         | x                     |
 | BNB LowE       | 580       | mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE_forlarmatch.list  |
 | EXTBNB         | 17697     | mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt |
