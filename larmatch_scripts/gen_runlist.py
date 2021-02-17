@@ -5,14 +5,19 @@ import os,sys,re
 #samplename = "mcc9jan_run1_bnb5e19"
 #inputlist="../run1inputlists/mcc9jan_run1_bnb5e19.list"
 
-samplename="mcc9_v29e_dl_run3_G1_extbnb_dlana"
-inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt"
+#samplename="mcc9_v29e_dl_run3_G1_extbnb_dlana"
+#inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt"
 
+#samplename = "mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge"
+#inputlist="../run3inputlists/mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge.list"
+
+samplename = "mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge"
+inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge_MRCNN_INPUTS_LIST.txt"
 
 outfolder="../../data/v0/%s/larmatch/"%(samplename)
 
 # get list of finished files
-cmd = "find %s -name larmatch_kps_*.root -size +1000k | sort" % (outfolder)
+cmd = "find %s -name larmatch_kps_*.root -size +2000k | sort" % (outfolder)
 print(cmd)
 plist = os.popen(cmd)
 flist = plist.readlines()
@@ -24,9 +29,20 @@ for f in flist:
     #print(f)
     base = os.path.basename(f)
     #print(base.split("fileid")[-1])
-    x = re.split("[_-]+",base.split("fileid")[-1])
+    if samplename in ["mcc9jan_run1_bnb5e19",
+                      "mcc9_v29e_dl_run3_G1_extbnb_dlana",
+                      "mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge",
+                      "mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge"]:
+        x = re.split("[_-]+",base.split("fileid")[-1])
+    else:
+        raise ValueError("not yet implemented")
+
     #print(x)
-    jobid = int(x[0])
+    try:
+      jobid = int(x[0])
+    except:
+	print("error parsing file: ",f," :: ",x)
+	sys.exit(-1)
     finished.append(jobid)
     #print(jobid," ",base)
 
