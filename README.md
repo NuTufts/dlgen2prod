@@ -29,15 +29,16 @@ Need to make lists for mask-rcnn and larmatch consistent.
 
 LArMatch Lists. How do we know how to align files? In folder, `larmatchlists`.
 
-Current version: v0
+Current version: v0.
+Files need to be verified.
 
 | Sample Type    | Num files | Official File List(s) | Size |
 | -----------    | --------- | --------------------- | ---- |
 | BNB Nu         | 15519     | larmatch_mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge.list | 2.4 TB  |
 | BNB intrinsics | 2232 | larmatch_mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge.list | 323 GB |
 | BNB LowE       | 580 | larmatch_v0_mcc9_v29e_dl_run3b_intrinsic_nue_LowE.list | 110 GB |
-| EXTBNB         | x | x |
-| RUN 1 5e19     | x | x |
+| EXTBNB         | 17697 | larmatch_v0_mcc9_v29e_dl_run3_G1_extbnb_dlana.list | 869 GB |
+| RUN 1 5e19     | 13745 | larmatch_v0_mcc9jan_run1_bnb5e19.list | 698 GB |
 
 Mask-RCNN files
 
@@ -55,7 +56,7 @@ LArFlow Reco Lists. How do we know how to align files? In folder, `lfrecolists`.
 | -----------    | --------- | ----------- |
 | BNB Nu         |   x       | x           |
 | BNB intrinsics | x | x |
-| BNB LowE       | 580 | larmatch_v0_mcc9_v29e_dl_run3b_intrinsic_nue_LowE.list |
+| BNB LowE       | x | x | 
 | EXTBNB         | x | x |
 | RUN 1 5e19     | x | x |
 
