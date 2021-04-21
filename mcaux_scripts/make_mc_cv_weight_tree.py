@@ -2,18 +2,23 @@ import os,sys
 import ROOT as rt
 import numpy as np
 
-weight_dir="/cluster/tufts/wongjiradlab/nutufts/data/weights/forCV_v48_Sep24/"
+#weight_dir="/cluster/tufts/wongjiradlab/nutufts/data/weights/forCV_v48_Sep24/"
 #weight_file="weights_forCV_v48_Sep24_intrinsic_nue_run1.root"
-weight_file="weights_forCV_v48_Sep24_intrinsic_nue_run3.root"
-input_file="/cluster/tufts/wongjiradlab/nutufts/data/v1/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge/larflowreco/ana/000/larflowreco_fileid0000_001361e0-3306-491f-9098-1d08eee8458b_kpsrecomanagerana.root"
-out_filename = "test.root"
+#weight_file="weights_forCV_v48_Sep24_intrinsic_nue_run3.root"
+#input_file="/cluster/tufts/wongjiradlab/nutufts/data/v1/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge/larflowreco/ana/000/larflowreco_fileid0000_001361e0-3306-491f-9098-1d08eee8458b_kpsrecomanagerana.root"
+#out_filename = "test.root"
 
-print("WEIGHT DIR: ",weight_dir)
-print("WEIGHT FILE: ",weight_file)
+input_file=sys.argv[1]
+weight_path=sys.argv[2]
+out_path=sys.argv[3]
+if os.path.exists(out_path):
+    print("OUTFILE ALREADY EXISTS. STOP")
+    sys.exit(0)
+
 print("INPUT FILE: ",os.path.basename(input_file))
-print("WEIGHT PATH: ",weight_dir+'/'+weight_file)
+print("WEIGHT PATH: ",weight_path)
 
-df = rt.RDataFrame( "eventweight_tree", weight_dir+"/"+weight_file )
+df = rt.RDataFrame( "eventweight_tree", weight_path )
 tf = rt.TFile(input_file)
 kpsana = tf.Get("KPSRecoManagerTree")
 nentries = kpsana.GetEntries()
@@ -48,4 +53,4 @@ print("Filled output tree")
 #print(out_dict)
 
 outdf = rt.RDF.MakeNumpyDataFrame(out_dict)
-outdf.Snapshot("eventweight",out_filename)
+outdf.Snapshot("eventweight",out_path)
