@@ -12,8 +12,8 @@ FILEIDLIST=$6
 WORKDIR=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/reco_scripts/
 UBDL_DIR=/cluster/tufts/wongjiradlab/twongj01/ubdl_py3/
 RECO_TEST_DIR=${UBDL_DIR}/larflow/larflow/Reco/test/
-OUTPUT_DIR=/cluster/tufts/wongjiradlab/nutufts/data/v0/${SAMPLE_NAME}/larflowreco/larlite/
-OUTPUT_ANA_DIR=/cluster/tufts/wongjiradlab/nutufts/data/v0/${SAMPLE_NAME}/larflowreco/ana/
+OUTPUT_DIR=/cluster/tufts/wongjiradlab/nutufts/data/v2/${SAMPLE_NAME}/larflowreco/larlite/
+OUTPUT_ANA_DIR=/cluster/tufts/wongjiradlab/nutufts/data/v2/${SAMPLE_NAME}/larflowreco/ana/
 OUTPUT_LOGDIR=${WORKDIR}/logdir/${SAMPLE_NAME}
 
 mkdir -p $OUTPUT_DIR
@@ -88,7 +88,7 @@ for ((i=0;i<${STRIDE};i++)); do
     if [ $larmatchok -eq 1 ]
     then
 
-	CMD="python $RECO_TEST_DIR/run_kpsrecoman.py --input-dlmerged ${baseinput}  --input-larflow ${baselm} --output ${local_outfile} -t -min "
+	CMD="python $RECO_TEST_DIR/run_kpsrecoman.py --input-dlmerged ${baseinput}  --input-larflow ${baselm} --output ${local_outfile} -tb --products min "
 	echo $CMD >> ${local_logfile}
 	#$CMD >> ${local_logfile} 2>&1
 	$CMD >> ${local_logfile}

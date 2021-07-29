@@ -2,22 +2,30 @@ from __future__ import print_function
 import os,sys,re
 
 
-#samplename = "mcc9_v29e_dl_run3b_intrinsic_nue_LowE"
-#inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE_MRCNN_INPUTS_LIST.txt"
-#stem="merged_dlreco"
+samplename = "mcc9_v29e_dl_run3b_intrinsic_nue_LowE"
+inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE_MRCNN_INPUTS_LIST.txt"
+stem="merged_dlreco"
 
-samplename = "mcc9_v29e_dl_run3_G1_extbnb_dlana"
-inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt"
-stem="merged_dlana"
+#samplename = "mcc9_v29e_dl_run3_G1_extbnb_dlana"
+#inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt"
+#stem="merged_dlana"
 
 #samplename = "mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge"
-#inputlist="inputlists/mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge.list"
+#inputlist="../run3inputlists/mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge.list"
 #stem="merged_dlreco"
 
-outfolder="/cluster/tufts/wongjiradlab/nutufts/data/v0/%s/larflowreco/larlite/"%(samplename)
+#samplename = "mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge"
+#inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge_MRCNN_INPUTS_LIST.txt"
+#stem="merged_dlreco"
+
+#samplename = "mcc9_v28_wctagger_bnb5e19"
+#inputlist="../run1inputlists/mcc9_v28_wctagger_bnb5e19_filelist.txt"
+#stem="merged_dlreco"
+
+outfolder="/cluster/tufts/wongjiradlab/nutufts/data/v2/%s/larflowreco/larlite/"%(samplename)
 larmatch_outfolder="/cluster/tufts/wongjiradlab/nutufts/data/v0/%s/larmatch/"%(samplename)
 
-# get list of finished vareco files
+# get list of finished reco files
 cmd = "find %s -name larflowreco_*.root -size +1k | sort" % (outfolder)
 print(cmd)
 plist = os.popen(cmd)
@@ -56,12 +64,17 @@ for f in flist:
     f1 = f.replace("_larlite.root","")
 
     if samplename in ["mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge",
-                      "mcc9_v29e_dl_run3_G1_extbnb_dlana"]:
+                      "mcc9_v29e_dl_run3_G1_extbnb_dlana",
+                      "mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge",
+                      "mcc9_v28_wctagger_bnb5e19",
+                      "mcc9jan_run1_bnb5e19"]:
         h = f1.split("larmatch_kps_fileid")[-1].split("_")[-1]
     elif samplename in ["mcc9_v29e_dl_run3b_intrinsic_nue_LowE"]:
         h = f.split("larmatch_kps_")[-1].split("-jobid")[0]
+    else:
+        raise ValueError("sample, %s, not setup for parsing larmatch files"%(samplename))
         
-    print(h)
+    print(h,": ",os.path.basename(f))
     lm_finished[h] = f
 
 print("larmatch files finished: ",len(lm_finished))
@@ -93,7 +106,7 @@ for fileid in missing:
         lmfile = lm_finished[h]
         print("%d %s %s"%(fileid,dlmerged,lmfile),file=fout)
     else:
-        print("No larmatch file for %s"%(os.path.basename(dlmerged)))
+        print("No larmatch file with hash %s"%(h))
 fout.close()
 
 

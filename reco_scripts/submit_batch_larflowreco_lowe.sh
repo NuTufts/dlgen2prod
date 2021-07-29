@@ -3,14 +3,14 @@
 # slurm submission script for making larmatch training data
 
 #SBATCH --job-name=lfreco
-#SBATCH --output=larflow_reco_sub2.log
+#SBATCH --output=larflow_reco_lowe_sub0.log
 #SBATCH --mem-per-cpu=4000
 #SBATCH --time=1-00:00:00
-#SBATCH --array=0-9
+#SBATCH --array=0-57
 #SBATCH --cpus-per-task=1
 ##SBATCH --partition=batch
-##SBATCH --partition=preempt
-#SBATCH --partition=wongjiradlab
+#SBATCH --partition=preempt
+##SBATCH --partition=wongjiradlab
 ##SBATCH --gres=gpu:p100:3
 ##SBATCH --partition ccgpu
 ##SBATCH --gres=gpu:t4:1
@@ -22,7 +22,7 @@ OFFSET=0
 STRIDE=10
 
 SAMPLE_NAME=mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE
-INPUTFILE=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE_MRCNN_INPUTS_LIST.txt
+INPUTFILE=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE_MRCNN_INPUTS_LIST.txt # 573
 INPUTSTEM=merged_dlreco
 FILEIDLIST=${RUN_DLANA_DIR}/runlist_reco_mcc9_v29e_dl_run3b_intrinsic_nue_LowE.txt
 
