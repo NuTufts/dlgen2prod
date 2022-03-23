@@ -6,9 +6,10 @@
 #SBATCH --output=larmatch_extbnb.log
 #SBATCH --mem-per-cpu=2000
 #SBATCH --time=1-00:00:00
-#SBATCH --array=0-49
+#SBATCH --array=0-3
 #SBATCH --cpus-per-task=4
-#SBATCH --partition=batch
+##SBATCH --partition=batch
+#SBATCH --partition=preempt
 ##SBATCH --partition=wongjiradlab
 ##SBATCH --gres=gpu:p100:3
 ##SBATCH --partition ccgpu
@@ -18,7 +19,7 @@
 container=/cluster/tufts/wongjiradlab/larbys/larbys-containers/ubdl_depsonly_py3.6.11_u16.04_cu11_pytorch1.7.1.simg
 RUN_DLANA_DIR=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/larmatch_scripts/
 OFFSET=0
-STRIDE=5
+STRIDE=1
 
 SAMPLE_NAME=mcc9_v29e_dl_run3_G1_extbnb_dlana
 INPUTFILE=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/maskrcnn_input_filelists/mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt

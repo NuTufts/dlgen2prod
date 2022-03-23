@@ -3,14 +3,14 @@
 # slurm submission script for making larmatch training data
 
 #SBATCH --job-name=larmatch
-#SBATCH --output=larmatch_mcc9_run3_intrinsics_nue_sub0.log
-#SBATCH --mem-per-cpu=1500
-#SBATCH --time=1:00:00
-#SBATCH --array=0
+#SBATCH --output=larmatch_run3_pi0.log
+#SBATCH --mem-per-cpu=2000
+#SBATCH --time=1-00:00:00
+#SBATCH --array=0-110
 #SBATCH --cpus-per-task=4
 ##SBATCH --partition=batch
-##SBATCH --partition=wongjiradlab
 #SBATCH --partition=preempt
+##SBATCH --partition=wongjiradlab
 ##SBATCH --gres=gpu:p100:3
 ##SBATCH --partition ccgpu
 ##SBATCH --gres=gpu:a100:1
@@ -19,12 +19,12 @@
 container=/cluster/tufts/wongjiradlab/larbys/larbys-containers/ubdl_depsonly_py3.6.11_u16.04_cu11_pytorch1.7.1.simg
 RUN_DLANA_DIR=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/larmatch_scripts/
 OFFSET=0
-STRIDE=6
+STRIDE=10
 
-SAMPLE_NAME=mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge
-INPUTFILE=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge_MRCNN_INPUTS_LIST.txt
-INPUTSTEM=merged_dlreco
-FILEIDLIST=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/larmatch_scripts/larmatch_runlist_mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge.txt
+SAMPLE_NAME=mcc9_v29e_dl_run3_pi0_lowBDT_sideband
+INPUTFILE=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/run3inputlists/mcc9_v29e_dl_run3_pi0_lowBDT_sideband.list
+INPUTSTEM=dlfilter_allsamples1
+FILEIDLIST=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/larmatch_scripts/larmatch_runlist_mcc9_v29e_dl_run3_pi0_lowBDT_sideband.txt
 
 module load singularity
 # GPU MODE
