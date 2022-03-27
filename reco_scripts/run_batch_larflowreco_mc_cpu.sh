@@ -9,11 +9,11 @@ FILEIDLIST=$6
 
 # we assume we are already in the container
 
-WORKDIR=/cluster/tufts/wongjiradlab/nutufts/dlgen2prod/reco_scripts/
-UBDL_DIR=/cluster/tufts/wongjiradlab/twongj01/ubdl_py3/
+WORKDIR=/cluster/tufts/wongjiradlabnu/nutufts/dlgen2prod/reco_scripts/
+UBDL_DIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/ubdl/
 RECO_TEST_DIR=${UBDL_DIR}/larflow/larflow/Reco/test/
-OUTPUT_DIR=/cluster/tufts/wongjiradlab/nutufts/data/v2/${SAMPLE_NAME}/larflowreco/larlite/
-OUTPUT_ANA_DIR=/cluster/tufts/wongjiradlab/nutufts/data/v2/${SAMPLE_NAME}/larflowreco/ana/
+OUTPUT_DIR=/cluster/tufts/wongjiradlabnu/nutufts/data/v2_me/${SAMPLE_NAME}/larflowreco/larlite/
+OUTPUT_ANA_DIR=/cluster/tufts/wongjiradlabnu/nutufts/data/v2_me/${SAMPLE_NAME}/larflowreco/ana/
 OUTPUT_LOGDIR=${WORKDIR}/logdir/${SAMPLE_NAME}
 
 mkdir -p $OUTPUT_DIR
@@ -39,7 +39,6 @@ local_logfile=`printf larflowreco_${SAMPLE_NAME}_jobid%d_%04d.log ${SLURM_JOB_ID
 #echo "SETUP CONTAINER/ENVIRONMENT"
 cd ${UBDL_DIR}
 alias python=python3
-source /usr/local/root/root-6.22.06/bin/thisroot.sh
 source setenv_py3.sh > /dev/null
 source configure.sh > /dev/null
 export PYTHONPATH=${LARMATCH_DIR}:${PYTHONPATH}

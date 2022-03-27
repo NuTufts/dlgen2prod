@@ -2,9 +2,9 @@ from __future__ import print_function
 import os,sys,re
 
 
-samplename = "mcc9_v29e_dl_run3b_intrinsic_nue_LowE"
-inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE_MRCNN_INPUTS_LIST.txt"
-stem="merged_dlreco"
+#samplename = "mcc9_v29e_dl_run3b_intrinsic_nue_LowE"
+#inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_LowE_MRCNN_INPUTS_LIST.txt"
+#stem="merged_dlreco"
 
 #samplename = "mcc9_v29e_dl_run3_G1_extbnb_dlana"
 #inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3_G1_extbnb_dlana_MRCNN_INPUTS_LIST.txt"
@@ -14,17 +14,23 @@ stem="merged_dlreco"
 #inputlist="../run3inputlists/mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge.list"
 #stem="merged_dlreco"
 
-#samplename = "mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge"
-#inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge_MRCNN_INPUTS_LIST.txt"
-#stem="merged_dlreco"
+samplename = "mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge"
+inputlist="../maskrcnn_input_filelists/mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge_MRCNN_INPUTS_LIST.txt"
+stem="merged_dlreco"
 
 #samplename = "mcc9_v28_wctagger_bnb5e19"
 #inputlist="../run1inputlists/mcc9_v28_wctagger_bnb5e19_filelist.txt"
 #stem="merged_dlreco"
 
-outfolder="/cluster/tufts/wongjiradlab/nutufts/data/v2/%s/larflowreco/larlite/"%(samplename)
-larmatch_outfolder="/cluster/tufts/wongjiradlab/nutufts/data/v0/%s/larmatch/"%(samplename)
+#samplename = "mcc9_v29e_dl_run3_pi0_lowBDT_sideband"
+#inputlist="../run3inputlists/mcc9_v29e_dl_run3_pi0_lowBDT_sideband.list"
+#stem="dlfilter_allsamples1"
 
+outfolder="/cluster/tufts/wongjiradlabnu/nutufts/data/v2_me/%s/larflowreco/larlite/"%(samplename)
+#larmatch_outfolder="/cluster/tufts/wongjiradlab/nutufts/data/v0/%s/larmatch/"%(samplename) # SPARSECONVNET LARMATCH
+larmatch_outfolder="/cluster/tufts/wongjiradlabnu/nutufts/data/larmatch/larmatch_me_v2/%s/"%(samplename) # NEW MINKOWSKI ENGINE LARMATCH
+
+# ==========================================================================
 # get list of finished reco files
 cmd = "find %s -name larflowreco_*.root -size +1k | sort" % (outfolder)
 print(cmd)
@@ -49,11 +55,13 @@ for f in flist:
     #print(jobid," ",base)    
 
 finished.sort()
-print("Number of finished files: ",len(finished))
-#input()
+print("Number of finished RECO files: ",len(finished))
+print("[enter] to continue")
+input()
 
+# ==============================================================================================
 # need list of larmatch files
-cmd = "find %s -name larmatch_kps*larlite.root -size +100k | sort"%(larmatch_outfolder)
+cmd = "find %s -name larmatchme_fileid*larlite.root -size +100k | sort"%(larmatch_outfolder)
 print(cmd)
 plist = os.popen(cmd)
 flist = plist.readlines()
@@ -63,6 +71,7 @@ for f in flist:
     print(f)
     f1 = f.replace("_larlite.root","")
 
+    # get the hash for each larmatch file
     if samplename in ["mcc9_v29e_dl_run3b_bnb_nu_overlay_nocrtremerge",
                       "mcc9_v29e_dl_run3_G1_extbnb_dlana",
                       "mcc9_v29e_dl_run3b_bnb_intrinsic_nue_overlay_nocrtremerge",
@@ -71,14 +80,19 @@ for f in flist:
         h = f1.split("larmatch_kps_fileid")[-1].split("_")[-1]
     elif samplename in ["mcc9_v29e_dl_run3b_intrinsic_nue_LowE"]:
         h = f.split("larmatch_kps_")[-1].split("-jobid")[0]
+    elif samplename in ["mcc9_v29e_dl_run3_pi0_lowBDT_sideband"]:
+        x = f1.split("larmatch_kps_fileid")[-1]
+        n = x.find("_")
+        h = x[n+1:]
+        
     else:
         raise ValueError("sample, %s, not setup for parsing larmatch files"%(samplename))
         
-    print(h,": ",os.path.basename(f))
+    print("hash: ",h,": ",os.path.basename(f))
     lm_finished[h] = f
 
 print("larmatch files finished: ",len(lm_finished))
-#input()
+input()
 
 pnjobs = os.popen("cat %s | wc -l"%(inputlist))
 njobs = int(pnjobs.readlines()[0])
