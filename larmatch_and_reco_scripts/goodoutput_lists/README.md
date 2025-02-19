@@ -1,0 +1,1 @@
+Textfiles listing good files ready for downstream processing are stored here by sample.

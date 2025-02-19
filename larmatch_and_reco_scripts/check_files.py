@@ -169,16 +169,16 @@ for n,f in enumerate(ff):
   input_files[n] = f
 fin.close()
 
-fout_runid = open("runid_list_%s.txt"%(samplename),'w')
+fout_runid = open("runid_list_%s_%s.txt"%(samplename,reco_ver),'w')
 for (fid,fhash) in run_fileid_list:
   print(fid," ",input_files[fid],file=fout_runid)
 fout_runid.close()
 
-fout_badlist = open('badoutput_list_%s.txt'%(samplename),'w')
+fout_badlist = open('badoutput_list_%s_%s.txt'%(samplename,reco_ver),'w')
 for f in bad_anafile_list:
   print(f,file=fout_badlist)
 
-fout_goodlist = open('goodoutput_lists/goodoutput_list_%s.txt'%(samplename),'w')
+fout_goodlist = open('goodoutput_lists/goodoutput_list_%s_%s.txt'%(samplename,reco_ver),'w')
 for f in good_anafile_list:
   print(f,file=fout_goodlist)
   
