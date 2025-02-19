@@ -13,6 +13,16 @@ sample_definitions = {
                                                  "bookkepping":"bookkeeping/fileinfo_mcc9_v40a_dl_run3b_bnb_nu_overlay_500k_CV.txt"}
 }
 
+def print_sample_names():    
+    for name in sample_definitions:
+        print(name)
+
+def get_sample_names():
+    sample_list = []
+    for name in sample_definitions:
+        sample_list.append(name)
+    return sample_list
+
 def get_sample_info(samplename):
     if samplename in sample_definitions:
         sample_info = sample_definitions[samplename]
