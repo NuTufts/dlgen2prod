@@ -81,7 +81,7 @@ run_kpsrecoman.py
             if "deploy_larmatchme_v2.py" in l:
                 in_larmatch_block = True
                 current_data = None
-                print("FOUND LARMATCH BLOCK START")
+                #print("FOUND LARMATCH BLOCK START")
                 continue
 
         if in_larmatch_block:
@@ -93,7 +93,7 @@ run_kpsrecoman.py
                 if current_data is not None:
                     stored_data[(current_jobid,current_entry)] = current_data
                 current_data = None
-                print("BAD LARMATCH ENTRY END: Next reco job")
+                #print("BAD LARMATCH ENTRY END: Next reco job")
                 continue
             if "deploy_larmatchme_v2.py" in l:
                 in_larmatch_block = True
@@ -101,7 +101,7 @@ run_kpsrecoman.py
                     stored_data[(current_jobid,current_entry)] = current_data                    
                 # need to reset event data
                 current_data = None
-                print("BAD LARMATCH ENTRY END: Next larmatch job")  
+                #print("BAD LARMATCH ENTRY END: Next larmatch job")  
                 continue
             if "End of entry[" in l:
                 # this is a proper end
@@ -109,13 +109,13 @@ run_kpsrecoman.py
                     current_data['isok'] = 1.0
                     stored_data[(current_jobid,current_entry)] = current_data
                 current_data = None
-                print("GOOD LARMATCH ENTRY END")
+                #print("GOOD LARMATCH ENTRY END")
                 continue
 
             # collect data for dictionary
             if "ENTRY" in l:
                 # start of entry
-                print("LARMATCH ENTRY START!")
+                #print("LARMATCH ENTRY START!")
                 current_entry = int(l.split()[3])
                 current_data = get_empty_data()
                 continue
@@ -189,10 +189,10 @@ run_kpsrecoman.py
     stored_data_keys = stored_data.keys()
     for k in stored_data_keys:
         data = stored_data[k]
-        print(k,": ",data)
+        #print(k,": ",data)
         for b in BRANCHES:
             branch_vars[b][0] = data[b]
-        if data['isok']<2.5:
+        if data['isok']<2.5 and False:
             print("pause for bad example")
             input()
         tree.Fill()
@@ -203,9 +203,25 @@ run_kpsrecoman.py
 
 if __name__=="__main__":
     
-    parse_logfile( "larmatchme_larflowreco_mcc9_v29e_dl_run1_C1_extbnb_jobid0106_13510529.log", "test.root" )
-    
+    #parse_logfile( "larmatchme_larflowreco_mcc9_v29e_dl_run1_C1_extbnb_jobid0106_13510529.log", "test.root" )
 
+    logdir = "../logdir/v3dev_lm_showerkp_retraining/mcc9_v29e_dl_run1_C1_extbnb/"
+    pfind = os.popen(f"find {logdir} -name larmatchme_larflowreco_*.log")
+    lfind = pfind.readlines()
+    nlogs = 0
+    ntot = len(lfind)
+    print("total number of logs to parse: ",ntot)
+    os.system("mkdir outdir")
+    for l in lfind:
+
+        if nlogs%100==0:
+            print("parseing log ",nlogs," of ",ntot)
+        l = l.strip()
+        print("parse: ",l)
+        lbase = os.path.basename(l)
+        outpath = "outdir/"+lbase.replace(".log",".root")
+        parse_logfile( l, outpath )
+        nlogs += 1
 
 
         
