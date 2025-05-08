@@ -9,16 +9,34 @@ INPUTSTEM=$4
 FILEIDLIST=$5 # make this using gen_runlist.py
 
 # we assume we are already in the container
-export OMP_NUM_THREADS=4
+
+# Common parameters
+export OMP_NUM_THREADS=16
 WORKDIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/dlgen2prod/larmatch_and_reco_scripts/
+
+# Parameters for production version reco
+#RECOVER=v2_me_06_03_prodtest
+#UBDL_DIR=/cluster/home/ubdl/
+#LARMATCH_DIR=${UBDL_DIR}/larflow/larmatchnet/larmatch/
+#WEIGHTS_DIR=${LARMATCH_DIR}
+#WEIGHT_FILE=larmatch_ckpt78k.pt
+#CONFIG_FILE=/cluster/home/lantern_scripts/config_larmatchme_deploycpu.yaml
+#LARMATCHME_SCRIPT=${LARMATCH_DIR}/deploy_larmatchme.py
+
+# Parameters for shower-keypoint update version
+RECOVER=v3dev_lm_showerkp_retraining
 UBDL_DIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/photon_analysis/ubdl/
 LARMATCH_DIR=${UBDL_DIR}/larflow/larmatchnet/larmatch/
 WEIGHTS_DIR=${LARMATCH_DIR}/checkpoints/sparkling-sunset-78/
 WEIGHT_FILE=checkpoint.44000th.tar
-RECO_TEST_DIR=${UBDL_DIR}/larflow/larflow/Reco/test/
-OUTPUT_DIR=/cluster/tufts/wongjiradlabnu/nutufts/data/v3dev_lm_showerkp_retraining/${SAMPLE_NAME}/larflowreco/ana/
-OUTPUT_LOGDIR=${WORKDIR}/logdir/v3dev_lm_showerkp_retraining/${SAMPLE_NAME}
 CONFIG_FILE=${WORKDIR}/config_larmatchme_deploycpu.yaml
+LARMATCHME_SCRIPT=${LARMATCH_DIR}/deploy_larmatchme_v2.py
+
+# More common parameters dependent on version-specific variables
+RECO_TEST_DIR=${UBDL_DIR}/larflow/larflow/Reco/test/
+OUTPUT_DIR=/cluster/tufts/wongjiradlabnu/nutufts/data/${RECOVER}/${SAMPLE_NAME}/larflowreco/ana/
+OUTPUT_LOGDIR=${WORKDIR}/logdir/${RECOVER}/${SAMPLE_NAME}
+
 
 mkdir -p $OUTPUT_DIR
 mkdir -p $OUTPUT_LOGDIR
@@ -92,11 +110,15 @@ for ((i=0;i<${STRIDE};i++)); do
 
     # larmatch v1
     #CMD="python3 $LARMATCH_DIR/deploy_larmatchme.py --config-file ${CONFIG_FILE} --supera $baseinput --weights ${WEIGHTS_DIR}/${WEIGHT_FILE} --output $lm_outfile --min-score 0.3 --adc-name wire --chstatus-name wire --device-name cpu -tb"
-    CMD="python3 $LARMATCH_DIR/deploy_larmatchme_v2.py --config-file ${CONFIG_FILE} --input-larcv $baseinput --input-larlite ${baseinput} --weights ${WEIGHTS_DIR}/${WEIGHT_FILE} --output ${baselm} --min-score 0.3 --adc-name wire --device-name cpu"
+    #CMD="python3 ${LARMATCHME_SCRIPT} --config-file ${CONFIG_FILE} --supera $baseinput --weights ${WEIGHTS_DIR}/${WEIGHT_FILE} --output ${lm_outfile} --min-score 0.5 --adc-name wire --device-name cpu -tb"
+    # larmatch v2 (shower keypoint version)
+    CMD="python3 ${LARMATCHME_SCRIPT} --config-file ${CONFIG_FILE} --input-larcv ${baseinput} --input-larlite ${baseinput} --weights ${WEIGHTS_DIR}/${WEIGHT_FILE} --output ${baselm} --min-score 0.3 --adc-name wire --device-name cpu --use-skip-limit"
     echo $CMD >> ${local_logfile}
     $CMD >> ${local_logfile} 2>&1
 
-    CMD="python3 $RECO_TEST_DIR/run_kpsrecoman.py --input-dlmerged ${baseinput} --input-larflow ${baselm} --output ${reco_outfile} -tb -mc --products min --run-nuvertexshowerreco-mcana-mode"
+    # prod version
+    #CMD="python3 ${RECO_TEST_DIR}/run_kpsrecoman.py --input-dlmerged ${baseinput} --input-larflow ${baselm} --output ${reco_outfile} -tb -mc --products min --save-all-keypoints --loglevel 3"
+    CMD="python3 ${RECO_TEST_DIR}/run_kpsrecoman.py --input-dlmerged ${baseinput} --input-larflow ${baselm} --output ${reco_outfile} -tb -mc --products min --save-all-keypoints --loglevel 3"    
     echo $CMD >> ${local_logfile}
     $CMD >> ${local_logfile}
 

@@ -205,7 +205,8 @@ if __name__=="__main__":
     
     #parse_logfile( "larmatchme_larflowreco_mcc9_v29e_dl_run1_C1_extbnb_jobid0106_13510529.log", "test.root" )
 
-    logdir = "../logdir/v3dev_lm_showerkp_retraining/mcc9_v29e_dl_run1_C1_extbnb/"
+    #logdir = "../logdir/v3dev_lm_showerkp_retraining/mcc9_v29e_dl_run1_C1_extbnb/"
+    logdir = "../logdir/v3dev_lm_showerkp_retraining/mcc9_v28_wctagger_bnboverlay/"
     pfind = os.popen(f"find {logdir} -name larmatchme_larflowreco_*.log")
     lfind = pfind.readlines()
     nlogs = 0

@@ -6,10 +6,10 @@ OFFSET=$1
 STRIDE=$2
 SAMPLE_NAME=$3
 INPUTSTEM=$4
-FILEIDLIST=$5 # make this using gen_runlist.py
+FILEIDLIST=$5 # make this using check_files.py
 
 # we assume we are already in the container
-export OMP_NUM_THREADS=4
+export OMP_NUM_THREADS=8
 WORKDIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/dlgen2prod/larmatch_and_reco_scripts/
 UBDL_DIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/photon_analysis/ubdl/
 LARMATCH_DIR=${UBDL_DIR}/larflow/larmatchnet/larmatch/
@@ -92,11 +92,11 @@ for ((i=0;i<${STRIDE};i++)); do
 
     # larmatch v1
     #CMD="python3 $LARMATCH_DIR/deploy_larmatchme.py --config-file ${CONFIG_FILE} --supera $baseinput --weights ${WEIGHTS_DIR}/${WEIGHT_FILE} --output $lm_outfile --min-score 0.3 --adc-name wire --chstatus-name wire --device-name cpu -tb"
-    CMD="python3 $LARMATCH_DIR/deploy_larmatchme_v2.py --config-file ${CONFIG_FILE} --input-larcv $baseinput --input-larlite ${baseinput} --weights ${WEIGHTS_DIR}/${WEIGHT_FILE} --output ${baselm} --min-score 0.3 --adc-name wire --device-name cpu"
+    CMD="python3 $LARMATCH_DIR/deploy_larmatchme_v2.py --config-file ${CONFIG_FILE} --input-larcv $baseinput --input-larlite ${baseinput} --weights ${WEIGHTS_DIR}/${WEIGHT_FILE} --output ${baselm} --min-score 0.3 --adc-name wire --device-name cpu --use-skip-limit"
     echo $CMD >> ${local_logfile}
     $CMD >> ${local_logfile} 2>&1
 
-    CMD="python $RECO_TEST_DIR/run_kpsrecoman.py --input-dlmerged ${baseinput} --input-larflow ${baselm} --output ${reco_outfile} -tb --products min"
+    CMD="python $RECO_TEST_DIR/run_kpsrecoman.py --input-dlmerged ${baseinput} --input-larflow ${baselm} --output ${reco_outfile} -tb --products min --save-all-keypoints --loglevel 3"
     echo $CMD >> ${local_logfile}
     $CMD >> ${local_logfile}
 

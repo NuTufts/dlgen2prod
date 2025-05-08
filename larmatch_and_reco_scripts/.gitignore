@@ -5,3 +5,5 @@
 *.log
 aho
 baka
+*.err
+*griderr_*
