@@ -9,16 +9,40 @@ INPUTSTEM=$4
 FILEIDLIST=$5 # make this using check_files.py
 
 # we assume we are already in the container
-export OMP_NUM_THREADS=8
+export OMP_NUM_THREADS=16
 WORKDIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/dlgen2prod/larmatch_and_reco_scripts/
+
+# Parameters for production version reco
+#RECOVER=v2_me_06_03_prodtest
+#UBDL_DIR=/cluster/home/ubdl/
+#LARMATCH_DIR=${UBDL_DIR}/larflow/larmatchnet/larmatch/
+#WEIGHTS_DIR=${LARMATCH_DIR}
+#WEIGHT_FILE=larmatch_ckpt78k.pt
+#CONFIG_FILE=/cluster/home/lantern_scripts/config_larmatchme_deploycpu.yaml
+#LARMATCHME_SCRIPT=${LARMATCH_DIR}/deploy_larmatchme.py
+
+# Parameters for shower-keypoint update version
+#RECOVER=v3dev_lm_showerkp_retraining
+#UBDL_DIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/photon_analysis/ubdl/
+#LARMATCH_DIR=${UBDL_DIR}/larflow/larmatchnet/larmatch/
+#WEIGHTS_DIR=${LARMATCH_DIR}/checkpoints/sparkling-sunset-78/
+#WEIGHT_FILE=checkpoint.44000th.tar
+#CONFIG_FILE=${WORKDIR}/config_larmatchme_deploycpu.yaml
+#LARMATCHME_SCRIPT=${LARMATCH_DIR}/deploy_larmatchme_v2.py
+
+# Parameters for shower-keypoint retraining and reco-retuning
+RECOVER=v3dev_reco_retune
 UBDL_DIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/photon_analysis/ubdl/
 LARMATCH_DIR=${UBDL_DIR}/larflow/larmatchnet/larmatch/
-WEIGHTS_DIR=${LARMATCH_DIR}/checkpoints/sparkling-sunset-78/
-WEIGHT_FILE=checkpoint.44000th.tar
-RECO_TEST_DIR=${UBDL_DIR}/larflow/larflow/Reco/test/
-OUTPUT_DIR=/cluster/tufts/wongjiradlabnu/nutufts/data/v3dev_lm_showerkp_retraining/${SAMPLE_NAME}/larflowreco/ana/
-OUTPUT_LOGDIR=${WORKDIR}/logdir/v3dev_lm_showerkp_retraining/${SAMPLE_NAME}
+WEIGHTS_DIR=${LARMATCH_DIR}/checkpoints/easy-wave-79/
+WEIGHT_FILE=checkpoint.93000th.tar
 CONFIG_FILE=${WORKDIR}/config_larmatchme_deploycpu.yaml
+LARMATCHME_SCRIPT=${LARMATCH_DIR}/deploy_larmatchme_v2.py
+
+# More common parameters dependent on version-specific variables
+RECO_TEST_DIR=${UBDL_DIR}/larflow/larflow/Reco/test/
+OUTPUT_DIR=/cluster/tufts/wongjiradlabnu/nutufts/data/${RECOVER}/${SAMPLE_NAME}/larflowreco/ana/
+OUTPUT_LOGDIR=${WORKDIR}/logdir/${RECOVER}/${SAMPLE_NAME}
 
 mkdir -p $OUTPUT_DIR
 mkdir -p $OUTPUT_LOGDIR
@@ -48,8 +72,8 @@ local_logfile=`printf larmatchme_larflowreco_${SAMPLE_NAME}_jobid%04d_${SLURM_JO
 cd ${UBDL_DIR}
 alias python=python3
 cd $UBDL_DIR
-source setenv_py3.sh
-source configure.sh
+source setenv_py3_container.sh
+source configure_container.sh
 cd ${UBDL_DIR}/larflow/larmatchnet
 source set_pythonpath.sh
 export PYTHONPATH=${LARMATCH_DIR}:${PYTHONPATH}

@@ -25,7 +25,11 @@ sample_definitions = {
     "mcc9_v28_wctagger_bnboverlay":{"dlmerged":"filelists/filelist_mcc9_v28_wctagger_bnboverlay.txt",
                                     "merged_dlreco_prefix":"merged_dlreco",                                    
                                     "reco_outdir":"/cluster/tufts/wongjiradlabnu/nutufts/data/",
-                                    "bookkeeping":"bookkeeping/fileinfo_mcc9_v28_wctagger_bnboverlay.txt"}
+                                    "bookkeeping":"bookkeeping/fileinfo_mcc9_v28_wctagger_bnboverlay.txt"},
+    "mcc9_v28_wctagger_nueintrinsics":{"dlmerged":"filelists/filelist_mcc9_v28_wctagger_nueintrinsics.txt",
+                                       "merged_dlreco_prefix":"merged_dlreco",                                    
+                                       "reco_outdir":"/cluster/tufts/wongjiradlabnu/nutufts/data/",
+                                       "bookkeeping":"bookkeeping/fileinfo_mcc9_v28_wctagger_nueintrinsics.txt"}
 }
 
 def print_sample_names():    
@@ -62,13 +66,13 @@ def get_bookkeeping_file(samplename, do_not_check_exists=False):
     
     return None
 
-def get_inputfile_list(samplename):
+def get_inputfile_list(samplename,folder="."):
     
     if samplename in sample_definitions:
         sample_info = sample_definitions[samplename]
         if "dlmerged" in sample_info:
             dlmerged_filelist = sample_info["dlmerged"]
-            if os.path.exists(dlmerged_filelist):
+            if os.path.exists(folder+"/"+dlmerged_filelist):
                 return dlmerged_filelist
             else:
                 raise ValueError("dlmerged input file list for sample=",samplename," not found: ",dlmerged_filelist)
@@ -110,6 +114,10 @@ def get_merged_dlreco_prefix( samplename ):
         return info["merged_dlreco_prefix"]
     else:
         raise ValueError("'merged_dlreco_prefix' parameter not in sampleinfo for sample=",samplename)
+
+def get_standard_goodlist_name( samplename, reco_version ):
+    goodoutput_filename=f"goodoutput_list_{samplename}_{reco_version}.txt"
+    return goodoutput_filename
 
 
 if __name__=="__main__":

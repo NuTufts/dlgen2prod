@@ -10,10 +10,13 @@ from make_booking_file import parse_bookkeeping_file
 #samplename = "mcc9_v29e_dl_run3_G1_extbnb_dlana"
 #samplename = "epem_DarkNu_BenchmarkD"
 #samplename = "mcc9_v40a_dl_run1_bnb_intrinsic_nue_overlay_CV"
-samplename = "mcc9_v29e_dl_run1_C1_extbnb"
-#samplename = "mcc9_v28_wctagger_bnboverlay"
 
-reco_version="v3dev_lm_showerkp_retraining"
+#samplename = "mcc9_v29e_dl_run1_C1_extbnb"
+#samplename = "mcc9_v28_wctagger_nueintrinsics"
+samplename = "mcc9_v28_wctagger_bnboverlay"
+
+#reco_version="v3dev_lm_showerkp_retraining"
+reco_version="v3dev_reco_retune"
 #reco_version="v2_me_06_03_prodtest"
 
 input_filelist=sampledefs.get_inputfile_list(samplename)
@@ -38,7 +41,7 @@ now = datetime.datetime.now()
 
 
 # get list of finished reco files
-#cmd = "find %s -name larflowreco_*.root -size +1k | sort" % (outfolder)
+#cmd = "find %s -name larflowreco_*.root -size +1M | sort" % (outfolder)
 #cmd = "find %s -name larflowreco_*.root | sort" % (outfolder)
 cmd = "find %s -type f -name \"larflowreco_*.root\" -size +1k | grep kpsrecomanagerana | sort" % (outfolder)
 print(cmd,flush=True)
@@ -100,7 +103,7 @@ for f in flist:
   fbook[fhash]["isgood"] = True
   good_fileid_list.append( inputinfo['fileid'] )
   ngood_events += inputinfo['nentries']
-  good_anafile_list.append( filename )
+  good_anafile_list.append( (filename,inputinfo['fileid']) )
   
   #print("file "+filename+" is good")
 print("Bad ID List: ",bad_fileid_list)
@@ -141,8 +144,8 @@ print("wrote bad output file: ",badoutput_name)
   
 goodlist_name='goodoutput_lists/goodoutput_list_%s_%s.txt'%(samplename,reco_version)
 fout_goodlist = open(goodlist_name,'w')
-for f in good_anafile_list:
-  print(f,file=fout_goodlist)
+for (f,fid) in good_anafile_list:
+  print(fid," ",f,file=fout_goodlist)
 print("wrote good list: ",goodlist_name)
   
 
