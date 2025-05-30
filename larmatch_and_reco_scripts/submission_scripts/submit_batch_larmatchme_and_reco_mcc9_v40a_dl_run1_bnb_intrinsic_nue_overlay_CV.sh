@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # slurm submission script for running merged dlreco through larmatch and larflowreco
-#SBATCH --job-name=r1bnbnue_lantern
+#SBATCH --job-name=lmreco
 #SBATCH --output=stdout_mcc9_v40a_dl_run1_bnb_intrinsic_nue_overlay_CV_sub00.log
 ##SBATCH --mem-per-cpu=8000
 #SBATCH --mem-per-cpu=6000
@@ -18,15 +18,15 @@
 ##SBATCH --nodelist=ccgpu01
 #SBATCH --error=griderr_lantern_mcc9_v40a_dl_run1_bnb_intrinsic_nue_overlay_CV_sub00.%j.%N.err
 
-#container=/cluster/tufts/wongjiradlabnu//larbys/larbys-container/singularity_minkowski_u20.04.cu111.torch1.9.0_jupyter_xgboost.sif
-container=/cluster/tufts/wongjiradlabnu//larbys/larbys-container/lantern_v2_me_06_03_prod/
+#container=/cluster/tufts/wongjiradlabnu//larbys/larbys-container/lantern_v2_me_06_03_prod/
+container=/cluster/tufts/wongjiradlabnu/twongj01/gen2/photon_analysis/u20.04_cu111_torch1.9.0_minkowski.sif
 RUN_DIR=/cluster/tufts/wongjiradlabnu/twongj01/gen2/dlgen2prod/larmatch_and_reco_scripts/
 OFFSET=0
 STRIDE=10
 
 SAMPLE_NAME=mcc9_v40a_dl_run1_bnb_intrinsic_nue_overlay_CV
 INPUTSTEM=merged_dlreco
-FILEIDLIST=/cluster/tufts/wongjiradlabnu/twongj01/gen2/dlgen2prod/larmatch_and_reco_scripts/runid_list_mcc9_v40a_dl_run1_bnb_intrinsic_nue_overlay_CV_v2_me_06_03_prodtest.txt
+FILEIDLIST=/cluster/tufts/wongjiradlabnu/twongj01/gen2/dlgen2prod/larmatch_and_reco_scripts/runid_list_mcc9_v40a_dl_run1_bnb_intrinsic_nue_overlay_CV_v3dev_reco_retune.txt
 # num files in inputlist: 10007
 # with 10 files per job, thats 1001 jobs to complete
 
